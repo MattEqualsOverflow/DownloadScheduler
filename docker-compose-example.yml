@@ -1,0 +1,35 @@
+version: '2'
+services:
+ transmission:
+  image: haugene/transmission-openvpn
+  cap_add:
+    - NET_ADMIN
+  devices:
+    - /dev/net/tun
+  restart: always
+  ports:
+    - "9091:9091"
+    - "8888:8888"
+  dns:
+    - 8.8.8.8
+    - 8.8.4.4
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - /local_base_path:/data # Set the part to the left of : as the base path of your files
+  environment:
+    - OPENVPN_PROVIDER=PIA
+    - OPENVPN_CONFIG=france # Country of origin of VPN
+    - OPENVPN_USERNAME= # Username
+    - OPENVPN_PASSWORD= # Password
+    - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
+    - LOCAL_NETWORK=192.168.0.0/24
+    - TRANSMISSION_SPEED_LIMIT_UP_ENABLED=true # Set to false to no longer limit upload speed
+    - TRANSMISSION_RATIO_LIMIT_ENABLED=true # Set to false to no longer limit on ratio
+ proxy:
+  image: haugene/transmission-openvpn-proxy
+  links:
+    - transmission
+  ports:
+    - 8080:8080
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
