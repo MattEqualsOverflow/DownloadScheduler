@@ -26,7 +26,8 @@
         - docker update --restart unless-stopped %docker name%
 1. Install Python and transmission-rpc
     - pip install transmission-rpc -U
-1. Install Notion (at least version 14.17)
+1. Install Node (at least version 14.17)
     - Linux:
         - curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
         - sudo apt install nodejs
+1. Create a new settings.yml file based on the example with all required settings
