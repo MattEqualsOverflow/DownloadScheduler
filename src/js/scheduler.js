@@ -69,6 +69,10 @@ let scheduler = {
 
         let records = await this.database.getRecords();
 
+        if (!records) {
+            return;
+        }
+
         records.forEach(record => {
 
             let previousRecord = this.currentRecords.filter(x => x.id == record.id);

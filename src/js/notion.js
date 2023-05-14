@@ -55,6 +55,7 @@ let notion = {
             return results;
         } catch (error) {
             console.log(error);
+            return false;
         }
         
     },
