@@ -51,4 +51,4 @@
         - Run the following command
             - ssh-add ~/.ssh/%private key file name%
 1. Clone the code
-    - git clone
+    - git clone 
