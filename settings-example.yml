@@ -1,0 +1,11 @@
+DockerBase: # The name of the transmission docker container after running docker compose up
+PythonCommand: python3 %arguments%
+NotionToken: # The user token for authenticating into notion
+NotionDatabase: # Id of the Notion Database to pull from
+Url1337X: https://www.1377x.to # Base domain for 1337X in case it changes
+UrlNyaa: https://nyaa.si/?f=0&c=1_2&q= # This is the url for searching, defaults to English Translated
+IpapiKey: # Authentication key for ipapi
+ExpectedCountry: France # The country to check for in ipapi
+DatabaseReloadSchedule: "*/15 * * * * *" # Schedule to check for updates in the database
+IpCheckSchedule: "0 0 */6 * * *" # Schedule to validate the IP address
+CleanSchedule: "0 0 0 * * *" # Schedule to delete old downloads in transmission (not the data)

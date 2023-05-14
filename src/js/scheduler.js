@@ -26,9 +26,15 @@ let scheduler = {
         this.database = database;
         this.scraper = scraper;
         this.pydownload = pydownload;
-        this.databaseReloadSchedule = settings.DatabaseReloadSchedule;
-        this.ipCheckSchedule = settings.IpCheckSchedule;
-        this.cleanSchedule = settings.CleanSchedule;
+        if (settings.DatabaseReloadSchedule) {
+            this.databaseReloadSchedule = settings.DatabaseReloadSchedule;
+        }
+        if (settings.IpCheckSchedule) {
+            this.ipCheckSchedule = settings.IpCheckSchedule;
+        }
+        if (settings.CleanSchedule) {
+            this.cleanSchedule = settings.CleanSchedule;
+        }
     },
 
     async start() {
