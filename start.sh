@@ -3,4 +3,4 @@
 cd "$(dirname "$0")"
 mkdir -p logs
 npm ci
-node ./app.js >> "$(date +%F).txt"
+node "$(pwd)/download-scheduler.js" >> "logs/$(date +%F).txt"
