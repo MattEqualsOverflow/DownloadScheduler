@@ -182,8 +182,6 @@ let scheduler = {
 
         this.logRecord(record, `Downloading ${url.substring(0, 97)}...`);
 
-        return;
-
         let downloadId = await this.pydownload.download(url, record.path);
 
         if (downloadId) {

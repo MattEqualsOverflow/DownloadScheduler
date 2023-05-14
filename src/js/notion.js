@@ -33,7 +33,7 @@ let notion = {
                 let updateId = element.id;
                 let properties = element.properties;
 
-                if (path && ((cron && site && search) || url)) {
+                if (name && path && ((cron && site && search) || url)) {
                     results.push({
                         id: updateId,
                         name: name,
