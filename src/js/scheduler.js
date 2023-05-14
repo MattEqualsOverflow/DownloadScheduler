@@ -13,6 +13,7 @@ let scheduler = {
     hasValidIp: false,
     databaseReloadSchedule: "0 * * * * *",
     ipCheckSchedule: "0 0 */6 * * *",
+    cleanSchedule: "0 0 0 * * *",
 
     jobs: {},
     currentRecords: [],
@@ -27,6 +28,7 @@ let scheduler = {
         this.pydownload = pydownload;
         this.databaseReloadSchedule = settings.DatabaseReloadSchedule;
         this.ipCheckSchedule = settings.IpCheckSchedule;
+        this.cleanSchedule = settings.CleanSchedule;
     },
 
     async start() {
@@ -48,10 +50,18 @@ let scheduler = {
 
         this.logMain("Starting ip schedule schedule of " + this.ipCheckSchedule);
         const ipCheck = schedule.scheduleJob(this.ipCheckSchedule, (fireData) => this.validateIp());
+
+        this.logMain("Starting cleaning schedule schedule of " + this.cleanSchedule);
+        const clean = schedule.scheduleJob(this.cleanSchedule, (fireData) => this.cleanDownloads());
     },
 
     mainSchedule() {
         this.getDatabaseData();
+    },
+
+    cleanDownloads() {
+        this.logMain("Performing download cleanup");
+        this.pydownload.clean_downloads();
     },
 
     async validateIp() {
@@ -211,6 +221,7 @@ let scheduler = {
                 newStatus = "Deleted";
             } else if (status == "seeding" || status == "seed pending" || status == "stopped") {
                 newStatus = "Complete";
+                this.logRecord(record, "Download complete");
             } else {
                 newStatus = "Downloading";
             }

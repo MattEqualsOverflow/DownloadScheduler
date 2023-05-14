@@ -32,6 +32,10 @@ let pydownload = {
 
     getStatus(id) {
         return this.executeFile("check_file.py", [id])
+    },
+
+    clean_downloads() {
+        return this.executeFile("clean_downloads.py")
     }
 }
 
