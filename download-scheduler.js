@@ -26,3 +26,4 @@ async function start() {
 
 scheduler.init(settings, docker, notion, scraper, pydownload);
 start();
+setInterval(() => {}, 24 * 60 * 60 * 1000);

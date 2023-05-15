@@ -9,3 +9,4 @@ ExpectedCountry: France # The country to check for in ipapi
 DatabaseReloadSchedule: "*/15 * * * * *" # Schedule to check for updates in the database
 IpCheckSchedule: "0 0 */6 * * *" # Schedule to validate the IP address
 CleanSchedule: "0 0 0 * * *" # Schedule to delete old downloads in transmission (not the data)
+Debug: false # If set to true, it will not perform any actual downloads

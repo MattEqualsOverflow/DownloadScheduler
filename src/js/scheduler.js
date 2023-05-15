@@ -11,9 +11,10 @@ let scheduler = {
     scraper: undefined,
     pydownload: undefined,
     hasValidIp: false,
-    databaseReloadSchedule: "0 * * * * *",
-    ipCheckSchedule: "0 0 */6 * * *",
-    cleanSchedule: "0 0 0 * * *",
+    databaseReloadScheduleCron: "0 * * * * *",
+    ipCheckScheduleCron: "0 0 */6 * * *",
+    cleanScheduleCron: "0 0 0 * * *",
+    debug: false,
 
     jobs: {},
     currentRecords: [],
@@ -27,13 +28,16 @@ let scheduler = {
         this.scraper = scraper;
         this.pydownload = pydownload;
         if (settings.DatabaseReloadSchedule) {
-            this.databaseReloadSchedule = settings.DatabaseReloadSchedule;
+            this.databaseReloadScheduleCron = settings.DatabaseReloadSchedule;
         }
         if (settings.IpCheckSchedule) {
-            this.ipCheckSchedule = settings.IpCheckSchedule;
+            this.ipCheckScheduleCron = settings.IpCheckSchedule;
         }
         if (settings.CleanSchedule) {
-            this.cleanSchedule = settings.CleanSchedule;
+            this.cleanScheduleCron = settings.CleanSchedule;
+        }
+        if (settings.Debug) {
+            this.debug = settings.Debug;
         }
     },
 
@@ -51,23 +55,32 @@ let scheduler = {
 
         await this.validateIp();
 
-        this.logMain("Starting main schedule of " + this.databaseReloadSchedule);
-        const main = schedule.scheduleJob(this.databaseReloadSchedule, (fireData) => this.mainSchedule());
+        this.logMain("Starting main schedule of " + this.databaseReloadScheduleCron);
+        const main = schedule.scheduleJob(this.databaseReloadScheduleCron, (fireData) => this.mainSchedule());
 
-        this.logMain("Starting ip schedule schedule of " + this.ipCheckSchedule);
-        const ipCheck = schedule.scheduleJob(this.ipCheckSchedule, (fireData) => this.validateIp());
+        this.logMain("Starting ip schedule schedule of " + this.ipCheckScheduleCron);
+        const ipCheck = schedule.scheduleJob(this.ipCheckScheduleCron, (fireData) => this.validateIp());
 
-        this.logMain("Starting cleaning schedule schedule of " + this.cleanSchedule);
-        const clean = schedule.scheduleJob(this.cleanSchedule, (fireData) => this.cleanDownloads());
+        this.logMain("Starting cleaning schedule schedule of " + this.cleanScheduleCron);
+        const clean = schedule.scheduleJob(this.cleanScheduleCron, (fireData) => this.cleanSchedule());
     },
 
     mainSchedule() {
         this.getDatabaseData();
     },
 
-    cleanDownloads() {
+    cleanSchedule() {
+        this.cleanDownloads();
+    },
+
+    async cleanDownloads() {
         this.logMain("Performing download cleanup");
-        this.pydownload.clean_downloads();
+        let results = await this.pydownload.clean_downloads();
+        let numDeleted = 0;
+        if (results && results.trim() != "") {
+            numDeleted = results.split("\n").length;
+        }
+        this.logMain(`Removed ${numDeleted} downloads`);
     },
 
     async validateIp() {
@@ -198,7 +211,10 @@ let scheduler = {
 
         this.logRecord(record, `Downloading ${url.substring(0, 97)}...`);
 
-        let downloadId = await this.pydownload.download(url, record.path);
+        let downloadId = "debug";
+        if (!this.debug) {
+            downloadId = await this.pydownload.download(url, record.path);
+        }
 
         if (downloadId) {
             record.status = "Started";
@@ -221,15 +237,16 @@ let scheduler = {
 
     async checkDownloadStatuses(records) {
         records.filter(x => (x.status == "Started" || x.status == "Downloading")).forEach(async (record) => {
-            let status = await this.pydownload.getStatus(record.downloadId);
-            let newStatus = "";
+            let status = "Downloading";
+            let newStatus = "Downloading";
+            if (record.downloadId != "debug") {
+                status = await this.pydownload.getStatus(record.downloadId);
+            }
             if (status == "Deleted") {
                 newStatus = "Deleted";
             } else if (status == "seeding" || status == "seed pending" || status == "stopped") {
                 newStatus = "Complete";
                 this.logRecord(record, "Download complete");
-            } else {
-                newStatus = "Downloading";
             }
 
             if (newStatus != record.status) {

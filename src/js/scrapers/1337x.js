@@ -59,7 +59,7 @@ let scraper_1337x = {
 
         return {
             link: link,
-            name: data[0][1].children[0].data,
+            name: data[0][1].children[0].data.trim(),
             time: time
         };
     },

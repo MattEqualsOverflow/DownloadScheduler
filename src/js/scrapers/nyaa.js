@@ -42,7 +42,7 @@ let scraper_nyaa = {
         let data = row.childNodes.filter(x => x.name == 'td').map(x => x.children);
         let link = data[2][3].attribs.href
         let time = data[4][0].data;
-        let name = data[1][1].children[0].data;
+        let name = data[1][3].children[0].data.trim();
 
         if (!this.validateDate(time)) {
             return false;

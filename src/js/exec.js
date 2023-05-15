@@ -7,8 +7,9 @@ let executeCommand = async (command) => {
     if (logCommand.length > 100) {
         logCommand = logCommand.substring(0, 97) + "...";
     }
-    //console.log("Executing command: %s", logCommand);
+    //console.log(command);
     let results = "";
+    let hasCompleted = false;
     exec(command, function (error, stdout, stderr) {
         if (error) {
             console.log("Error making command '%s'", command);
@@ -17,10 +18,11 @@ let executeCommand = async (command) => {
         }
         else {
             results = stdout.trim();
+            hasCompleted = true;
         }
     });
 
-    while (results === "") {
+    while (!hasCompleted) {
         await delay(50);
     }
 
