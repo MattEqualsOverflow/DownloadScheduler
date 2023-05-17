@@ -12,8 +12,13 @@ let pydownload = {
 
     executeFile(file, arguments) {
         let filePath = this.pyDirectory + file;
-        let argumentString = arguments.join("\" \"");
-        let commandString = this.command.replace("%arguments%", `"${filePath}" "${argumentString}"`);
+        let commandString = "";
+        if (arguments) {
+            let argumentString = arguments.join("\" \"");
+            commandString = this.command.replace("%arguments%", `"${filePath}" "${argumentString}"`);
+        } else {
+            commandString = this.command.replace("%arguments%", `"${filePath}"`);
+        }
         return exec(commandString);
     },
 

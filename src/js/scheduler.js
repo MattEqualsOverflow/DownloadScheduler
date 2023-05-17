@@ -66,11 +66,22 @@ let scheduler = {
     },
 
     mainSchedule() {
-        this.getDatabaseData();
+        try {
+            this.getDatabaseData();
+        } catch (e) {
+            this.logMain(`Unable to retrieve data from the database: ${e.message}`);
+            console.log(e);
+        }
+        
     },
 
     cleanSchedule() {
-        this.cleanDownloads();
+        try {
+            this.cleanDownloads();
+        } catch (e) {
+            this.logMain(`Unable to clean downloads: ${e.message}`);
+            console.log(e);
+        }
     },
 
     async cleanDownloads() {
@@ -84,10 +95,20 @@ let scheduler = {
     },
 
     async validateIp() {
-        let data = await this.docker.getUrlContents(this.ipapiUrl);
-        let json = JSON.parse(data);
-        this.logMain(`Country: ${json['country_name']} | Expected Country: ${this.expectedCountry} (${json['country_name'] == this.expectedCountry ? 'Valid' : 'Invalid'})`);
-        this.hasValidIp = json['country_name'] == this.expectedCountry;
+        for (let i = 0; i < 3; i++) {
+            try {
+                let data = await this.docker.getUrlContents(this.ipapiUrl);
+                let json = JSON.parse(data);
+                this.logMain(`Country: ${json['country_name']} | Expected Country: ${this.expectedCountry} (${json['country_name'] == this.expectedCountry ? 'Valid' : 'Invalid'})`);
+                this.hasValidIp = json['country_name'] == this.expectedCountry;
+                return;
+            } catch (e) {
+                this.logMain(`Error trying to validate ip: ${e.message}`);
+                console.log(e);
+            }
+        }
+        this.logMain("Not able to validate IP address");
+        this.hasValidIp = false;
     },
 
     async getDatabaseData() {
@@ -157,8 +178,13 @@ let scheduler = {
     },
 
     downloadManualRecord(record) {
-        this.logRecord(record, `Downloading manual record`);
-        this.startDownload(record, record.url);
+        try {
+            this.logRecord(record, `Downloading manual record`);
+            this.startDownload(record, record.url);
+        } catch (e) {
+            this.logRecord(record, `Failed to download manual record: ${e.message}`);
+            console.log(e);
+        }
     },
 
     async downloadScheduledRecord(record) {
@@ -172,28 +198,33 @@ let scheduler = {
             return;
         }
 
-        // Check if it's already been downloaded today
-        let prevTime = updatedRecord[0].updated ? updatedRecord[0].updated : false;
-        if (prevTime && updatedRecord[0].status != "Failed" && updatedRecord[0].status != "Not Found" && updatedRecord[0].status != "") {
-            let prevMoment = moment(prevTime);
-            let currMoment = moment().subtract(18, 'hours');
-            if (prevMoment > currMoment) {
-                return;
+        try {
+            // Check if it's already been downloaded today
+            let prevTime = updatedRecord[0].updated ? updatedRecord[0].updated : false;
+            if (prevTime && updatedRecord[0].status != "Failed" && updatedRecord[0].status != "Not Found" && updatedRecord[0].status != "") {
+                let prevMoment = moment(prevTime);
+                let currMoment = moment().subtract(18, 'hours');
+                if (prevMoment > currMoment) {
+                    return;
+                }
             }
-        }
 
-        let latestRecord = updatedRecord[0];
+            let latestRecord = updatedRecord[0];
 
-        // Try to search for the download and start downloading it
-        this.logRecord(latestRecord, `Searching site for "${latestRecord.search}"`);
-        let searchResults = await this.scraper.search(latestRecord.site, latestRecord.search, latestRecord.regex);
-        if (!searchResults) {
-            this.logRecord(latestRecord, `No results found using search term "${latestRecord.search}"`);
-            latestRecord.status = "Not Found";
-            this.database.updateRecord(latestRecord);
-        } else {
-            this.logRecord(latestRecord, `Download "${searchResults.name}" found with a time of ${searchResults.time}`);
-            this.startDownload(latestRecord, searchResults.link);
+            // Try to search for the download and start downloading it
+            this.logRecord(latestRecord, `Searching site for "${latestRecord.search}"`);
+            let searchResults = await this.scraper.search(latestRecord.site, latestRecord.search, latestRecord.regex);
+            if (!searchResults) {
+                this.logRecord(latestRecord, `No results found using search term "${latestRecord.search}"`);
+                latestRecord.status = "Not Found";
+                this.database.updateRecord(latestRecord);
+            } else {
+                this.logRecord(latestRecord, `Download "${searchResults.name}" found with a time of ${searchResults.time}`);
+                this.startDownload(latestRecord, searchResults.link);
+            }
+        } catch (e) {
+            this.logRecord(record, `Unable to download: ${e.message}`)
+            console.log(e);
         }
     },
 
