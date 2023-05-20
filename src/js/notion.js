@@ -1,4 +1,5 @@
 const { Client } = require("@notionhq/client")
+var moment = require('moment');
 
 let notion = {
     client: undefined,
@@ -54,6 +55,7 @@ let notion = {
 
             return results;
         } catch (error) {
+            this.log("Unable to retrieve records from notion");
             console.log(error);
             return false;
         }
@@ -123,7 +125,11 @@ let notion = {
             console.log("unbound type %s", property.type)
         }
         return '';
-    }
+    },
+
+    log(message) {
+        console.log(`[${moment().format()}] [notion] ${message}`)
+    },
 }
 
 module.exports = notion;
