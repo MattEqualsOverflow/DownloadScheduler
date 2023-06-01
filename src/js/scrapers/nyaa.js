@@ -14,6 +14,7 @@ let scraper_nyaa = {
     async searchDownload(searchTerm, regex) {
         let regexObj = regex ? new RegExp(regex) : false;
         var url = this.searchUrl + encodeURIComponent(searchTerm);
+        console.log(url);
         var content = (await axios.get(url)).data;
         if (!content) {
             return false;
