@@ -19,7 +19,6 @@ let scraper_nyaa = {
         if (!content) {
             return false;
         }
-        console.log("Content:" + content);
         const document = cheerio.load(content);
         var rows = document("tbody tr");
         for (let i = 0; i < rows.length; i++) {
@@ -44,7 +43,7 @@ let scraper_nyaa = {
         let data = row.childNodes.filter(x => x.name == 'td').map(x => x.children);
         let link = data[2][3].attribs.href
         let time = data[4][0].data;
-        let name = data[1][3].children[0].data.trim();
+        let name = data[1][data[1].length-1].children[0].data.trim();
 
         if (!this.validateDate(time)) {
             return false;
