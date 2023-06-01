@@ -19,7 +19,7 @@ let scraper_nyaa = {
         if (!content) {
             return false;
         }
-        console.log(content);
+        console.log("Content:" + content);
         const document = cheerio.load(content);
         var rows = document("tbody tr");
         for (let i = 0; i < rows.length; i++) {
