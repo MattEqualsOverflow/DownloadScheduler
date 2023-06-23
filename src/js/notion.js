@@ -94,10 +94,16 @@ let notion = {
             }]
         }
 
-        await this.client.pages.update({
-            page_id: record.notionId,
-            properties: properties
-        });
+        try {
+            await this.client.pages.update({
+                page_id: record.notionId,
+                properties: properties
+            });
+        } catch (e) {
+            this.logMain(`Unable to update notion record: ${e.message}`);
+            console.log(e);
+        }
+        
     },
 
     getPropertyValue(property) {
