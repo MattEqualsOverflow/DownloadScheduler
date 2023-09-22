@@ -13,5 +13,5 @@ c = Client(host='localhost', port=9091)
 try:
     download = c.get_torrent(torrent_id = id)
     print(download.status)
-except:
-    print("Deleted")
+except Exception as e:
+    print("Deleted " + e.message)

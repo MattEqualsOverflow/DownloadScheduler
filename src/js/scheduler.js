@@ -273,8 +273,9 @@ let scheduler = {
             if (record.downloadId != "debug") {
                 status = await this.pydownload.getStatus(record.downloadId);
             }
-            if (status == "Deleted") {
+            if (status.startsWith("Deleted")) {
                 newStatus = "Deleted";
+                this.logRecord(record, "Download deleted: " + status);
             } else if (status == "seeding" || status == "seed pending" || status == "stopped") {
                 newStatus = "Complete";
                 this.logRecord(record, "Download complete");
