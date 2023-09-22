@@ -230,7 +230,7 @@ let scheduler = {
 
     async startDownload(record, url) {
 
-        if (!url.startsWith("magnet")) {
+        if (!url.startsWith("magnet") && !url.endsWith(".torrent")) {
             if (url.length > 100) {
                 url = url.substring(0, 97) + "...";
             }
