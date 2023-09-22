@@ -23,7 +23,7 @@ let pydownload = {
     },
 
     download(url, path) {
-        if (!url.startsWith("magnet")) {
+        if (!url.startsWith("magnet") && !url.endsWith(".torrent")) {
             console.log("Invalid download url");
             return false;
         }
