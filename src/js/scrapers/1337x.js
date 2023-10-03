@@ -15,7 +15,12 @@ let scraper_1337x = {
     async searchDownload(searchTerm, regex) {
         let regexObj = regex ? new RegExp(regex) : false;
         var url = this.searchUrl.replace("%search%", encodeURIComponent(searchTerm))
+
+        this.log(url);
+
         var content = await this.docker.getUrlContents(url);
+
+        this.log(content);
 
         if (!content) {
             return false;
@@ -86,7 +91,11 @@ let scraper_1337x = {
         let b = uploadDate.endsWith("am");
         let c = uploadDate.endsWith("pm");
         return uploadDate.includes(dateString) || uploadDate.endsWith("am") || uploadDate.endsWith("pm");
-    }
+    },
+
+    log(message) {
+        console.log(`[${moment().format()}] [1337X] ${message}`)
+    },
 
 
 }
