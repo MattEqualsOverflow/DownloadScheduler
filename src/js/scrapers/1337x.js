@@ -80,7 +80,13 @@ let scraper_1337x = {
         if (!document) {
             return false;
         }
-        return document(".torrentdown1")[0].attribs.href;
+        var links = document("a")
+        for (let i = 0; i < links.length; i++) {
+            if (links[i].attribs && links[i].attribs.href && links[i].attribs.href.startsWith("magnet:?")) {
+                return links[i].attribs.href;
+            }
+        }
+        return false;
     },
 
     validateDate(uploadDate) {
