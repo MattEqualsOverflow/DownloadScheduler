@@ -20,7 +20,7 @@ let scraper_1337x = {
 
         var content = await this.docker.getUrlContents(url);
 
-        this.log(content);
+        //this.log(content);
 
         if (!content) {
             return false;
@@ -54,9 +54,14 @@ let scraper_1337x = {
                 return false;
             }
         }
+
+        this.log(row);
+
         let data = row.childNodes.filter(x => x.name == 'td').map(x => x.children);
         let link = this.baseUrl + data[0][1].attribs.href
         let time = data[3][0].data;
+
+        this.log("Row found with time: " + time);
 
         if (!this.validateDate(time)) {
             return false;
