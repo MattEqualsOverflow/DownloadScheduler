@@ -282,8 +282,13 @@ let scheduler = {
             }
 
             if (newStatus != record.status) {
+                let prevStatus = record.status;
                 record.status = newStatus;
-                await this.database.updateRecord(record);
+                let result = await this.database.updateRecord(record);
+                if (result != true)
+                {
+                    record.status = prevStatus;
+                }
             }
         });
     }

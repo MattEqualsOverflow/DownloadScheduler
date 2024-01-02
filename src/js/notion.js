@@ -99,9 +99,11 @@ let notion = {
                 page_id: record.notionId,
                 properties: properties
             });
+            return true;
         } catch (e) {
-            this.logMain(`Unable to update notion record: ${e.message}`);
+            this.log(`Unable to update notion record: ${e.message}`);
             console.log(e);
+            return false;
         }
         
     },
