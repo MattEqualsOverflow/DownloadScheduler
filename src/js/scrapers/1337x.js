@@ -55,13 +55,11 @@ let scraper_1337x = {
             }
         }
 
-        this.log(row);
-
         let data = row.childNodes.filter(x => x.name == 'td').map(x => x.children);
         let link = this.baseUrl + data[0][1].attribs.href
         let time = data[3][0].data;
 
-        this.log("Row found with time: " + time);
+        // this.log("Row found with time: " + time);
 
         if (!this.validateDate(time)) {
             return false;
