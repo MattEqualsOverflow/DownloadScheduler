@@ -128,7 +128,8 @@ let scheduler = {
             let previousRecord = this.currentRecords.filter(x => x.id == record.id);
             let hasPreviousRecord = previousRecord && previousRecord[0];
             let hasChanged = hasPreviousRecord && this.hasRecordChanged(previousRecord[0], record);
-            
+
+            this.logRecord(logRecord, "Parsing record from database | Has Previous Record: " + hasPreviousRecord + " | Has Changed: " + hasChanged)
 
             if (record.url && (hasChanged || record.status == "Failed" || record.status == "")) {
                 if (hasChanged) {
