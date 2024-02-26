@@ -1,5 +1,6 @@
 const schedule = require('node-schedule');
 var moment = require('moment');
+const axios = require('axios')
 
 let scheduler = {
 
@@ -97,10 +98,10 @@ let scheduler = {
     async validateIp() {
         for (let i = 0; i < 3; i++) {
             try {
-                let data = await this.docker.getUrlContents(this.ipapiUrl);
-                let json = JSON.parse(data);
-                this.logMain(`Country: ${json['country_name']} | Expected Country: ${this.expectedCountry} (${json['country_name'] == this.expectedCountry ? 'Valid' : 'Invalid'})`);
-                this.hasValidIp = json['country_name'] == this.expectedCountry;
+                let localIp = (await axios.get("https://api.ipify.org")).data;
+                let proxyIp = await this.docker.getUrlContents("https://api.ipify.org");
+                this.hasValidIp = localIp != proxyIp;
+                this.logMain(`Local IP: ${localIp} | Proxy IP: ${proxyIp} | (${this.hasValidIp ? 'Valid' : 'Invalid'})`);
                 return;
             } catch (e) {
                 this.logMain(`Error trying to validate ip: ${e.message}`);
