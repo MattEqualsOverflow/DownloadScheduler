@@ -242,7 +242,7 @@ let scheduler = {
             return;
         }
 
-        this.logRecord(record, `Downloading ${url.substring(0, 97)}...`);
+        this.logRecord(record, `Downloading ${url.substring(0, 50)}... to ${record.path}`);
 
         let downloadId = "debug";
         if (!this.debug) {

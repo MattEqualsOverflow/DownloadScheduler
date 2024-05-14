@@ -24,6 +24,7 @@ let notion = {
                 let name = this.getPropertyValue(element.properties.Name);
                 let status = this.getPropertyValue(element.properties.Status);
                 let updated = this.getPropertyValue(element.properties.Updated);
+                let folder = this.getPropertyValue(element.properties.Folder);
                 let path = this.getPropertyValue(element.properties.Path);
                 let search = this.getPropertyValue(element.properties.Search);
                 let site = this.getPropertyValue(element.properties.Site);
@@ -33,6 +34,22 @@ let notion = {
                 let downloadId = this.getPropertyValue(element.properties.Id);
                 let updateId = element.id;
                 let properties = element.properties;
+
+                if (folder == "Software") {
+                    path = "Software/" + path;
+                } else if (folder == "Games") {
+                    path = "Games/" + path;
+                } else if (folder == "Music") {
+                    path = "Music/" + path;
+                } else if (folder == "Movies") {
+                    path = "Videos/Movies/" + path;
+                } else if (folder == "TV Shows") {
+                    path = "Videos/TV Shows/" + path;
+                } else if (folder == "Anime") {
+                    path = "Videos/Anime/" + path;
+                }
+
+                path = path.replace("\\", "/");
 
                 if (name && path && ((cron && site && search) || url)) {
                     results.push({
