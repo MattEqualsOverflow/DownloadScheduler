@@ -1,13 +1,24 @@
 {
+  "name": "download-scheduler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
   "dependencies": {
-    "@notionhq/client": "^2.2.5",
+    "@notionhq/client": "^2.2.15",
     "axios": "^1.4.0",
     "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
     "moment": "^2.29.4",
+    "node-cron": "^3.0.3",
     "node-schedule": "^2.1.1",
+    "winston": "^3.13.1",
+    "winston-daily-rotate-file": "^5.0.0",
     "yaml": "^2.2.2"
   },
   "devDependencies": {
-    "typescript": "^5.0.4"
+    "typescript": "^5.5.4"
   }
 }

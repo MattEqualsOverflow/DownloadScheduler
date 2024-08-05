@@ -1,0 +1,5 @@
+NOTION_TOKEN=
+NOTION_DATABASE=
+URL_1337X=https://1337x.to
+URL_NYAA=https://nyaa.si/?f=0&c=1_2&q=
+LOG_PATH="/logs/log_%DATE%.log"
