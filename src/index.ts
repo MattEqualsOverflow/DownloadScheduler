@@ -23,14 +23,14 @@ async function init() {
         await transmission.validateConnection();
     }
     
-    await scheduler.getNotionRecords();
+    await scheduler.getDatabaseRecords();
 
     new Cron(IpCheckSchedule, async() => {
         await transmission.validateConnection();
     });
     
     new Cron(DatabaseReloadSchedule, async() => {
-        await scheduler.getNotionRecords();
+        await scheduler.getDatabaseRecords();
     });
     
     new Cron(CheckDownloadStatusSchedule, async() => {

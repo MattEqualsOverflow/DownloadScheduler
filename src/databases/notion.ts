@@ -89,6 +89,8 @@ export class Notion implements IDatabase {
                 }
             });
 
+            Logger.info(`Database refreshed: ${results.length} records found`);
+
             return results;
 
         } catch (error: any) {
