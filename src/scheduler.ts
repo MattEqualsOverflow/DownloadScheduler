@@ -27,7 +27,7 @@ export class Scheduler {
         this.scrapers.set("1337x", new Scraper1337x());
     }
 
-    async getNotionRecords() {
+    async getDatabaseRecords() {
 
         if (!this.transmission.isConnectionValid()) {
             return;
