@@ -31,6 +31,7 @@ export interface ITorrentStatus {
 export class Transmission {
     public static readonly SessionHeader = 'X-Transmission-Session-Id';
     private sessionToken: string | null = null;
+    private lastSessionTime: number = 0;
     private isValid = false;
 
     private options = {
@@ -89,7 +90,7 @@ export class Transmission {
     };
 
     private async getToken(): Promise<string | null> {
-        if (this.sessionToken) {
+        if (this.sessionToken && new Date().getTime() - this.lastSessionTime < 3300000) {
             return this.sessionToken;
         }
         try {
@@ -104,6 +105,8 @@ export class Transmission {
             }
             
             if (this.sessionToken) {
+                Logger.info("Updated transmission session token");
+                this.lastSessionTime = new Date().getTime();
                 return this.sessionToken;
             } else {
                 Logger.error("Unable to get transmission header token");
