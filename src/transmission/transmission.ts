@@ -90,7 +90,7 @@ export class Transmission {
     };
 
     private async getToken(): Promise<string | null> {
-        if (this.sessionToken && new Date().getTime() - this.lastSessionTime < 3300000) {
+        if (this.sessionToken && new Date().getTime() - this.lastSessionTime < 3600000) {
             return this.sessionToken;
         }
         try {
@@ -131,6 +131,8 @@ export class Transmission {
             headers,
         }).catch(e => {
             Logger.error(`Unable to make rpcCall ${method}`);
+            this.sessionToken = null;
+            this.lastSessionTime = 0;
             return undefined;
         });
         return response?.data;
