@@ -90,6 +90,12 @@ export class Scheduler {
 
         torrents.forEach(async (torrent) => {
             let record = this.records.find(x => x.downloadId == torrent.hashString);
+
+            // Skip records that are not found as this is an old record
+            if (record && record.status === RecordState.NotFound) {
+                return;
+            }
+
             let percentDone = Math.round((torrent.percentDone ?? 0) * 100);
 
             if (torrent.hashString) {
