@@ -11,6 +11,7 @@ export class ScraperNyaa implements IScraper {
     async search(searchTerm: string, regex: string): Promise<ISearchResult | null> {
         let regexObj = regex ? new RegExp(regex) : null;
         let url = UrlNyaa + encodeURIComponent(searchTerm);
+        Logger.info(`Searching ${url}`);
         let content = await axios.get(url).then(r => {
             return r.data as string;
         }).catch(e => {
@@ -50,6 +51,8 @@ export class ScraperNyaa implements IScraper {
         let time = data[4][0].data as string;
         let name = data[1].filter((x: any) => x.name == 'a' && !x.attribs.href.endsWith("#comments"))[0].children[0].data.trim() as string;
         
+        Logger.info(`Validating ${name} ${time} - ${link}`);
+
         if (!this.validateDate(time)) {
             return null;
         }
