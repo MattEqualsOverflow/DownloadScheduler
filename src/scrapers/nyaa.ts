@@ -10,8 +10,12 @@ export class ScraperNyaa implements IScraper {
 
     async search(searchTerm: string, regex: string): Promise<ISearchResult | null> {
         let regexObj = regex ? new RegExp(regex) : null;
-        let url = UrlNyaa + encodeURIComponent(searchTerm);
+
+        const url = UrlNyaa.includes("%search%")
+            ? UrlNyaa.replace("%search%", encodeURIComponent(searchTerm))
+            : UrlNyaa + encodeURIComponent(searchTerm);
         Logger.info(`Searching ${url}`);
+        
         let content = await axios.get(url).then(r => {
             return r.data as string;
         }).catch(e => {

@@ -12,7 +12,7 @@ export class Scraper1337x implements IScraper {
         let regexObj = regex ? new RegExp(regex) : null;        
         let url = this.getSearchUrl(searchTerm);
 
-        Logger.info(url);
+        Logger.info(`Searching ${url}`);
 
         let content = await axios.get(url).then(r => {
             return r.data as string;
